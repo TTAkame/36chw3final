@@ -24,9 +24,15 @@ KeyValuePair PriorityQueue::min() {
 }
 
 KeyValuePair PriorityQueue::removeMin() {
-	removeNode(ROOT);
-    size_ --;
-    return nodes_[ROOT];
+    KeyValuePair a;
+    if(nodes_.size()!=0){ 
+	    a = nodes_[ROOT];
+        removeNode(ROOT);
+    }
+    else{
+        a = {0,{0,0}};
+    }
+    return a;
 }
 
 bool PriorityQueue::isEmpty() const {
@@ -55,6 +61,7 @@ nlohmann::json PriorityQueue::JSON() const {
       }
       result[std::to_string(i)] = node;
   }
+  result["metadata"]["maxHeapSize"] = max_size_;
   result["metadata"]["max_size"] = max_size_;
   result["metadata"]["size"] = size_;
 	return result;
@@ -67,13 +74,12 @@ void PriorityQueue::heapifyUp(size_t i) {
 
     while(j>0){
         if((i<=len)&&i>0){
-            if(nodes_[i].first<nodes_[j].first){
+            if(nodes_[i].first<=nodes_[j].first){
                 std::swap(nodes_[i].first,nodes_[j].first);
                 i=j;
                 j=i/2;
             }
             else{
-                j=-1;
                 break;
             }
         }
@@ -85,30 +91,53 @@ void PriorityQueue::heapifyUp(size_t i) {
 }
 
 void PriorityQueue::heapifyDown(size_t i) {
-	size_t j = 2*i+1,x;
-    size_t len = size_;
-    double smaller;
-    while(j<=len){
-        smaller = (nodes_[j-1].first<nodes_[j].first) ? nodes_[j-1].first : nodes_[j].first;
-        x = (nodes_[j-1].first<nodes_[j].first) ? 2*i : 2*i+1;
-        if(nodes_[i].first>smaller){
-            std::swap(nodes_[i],nodes_[x]);
-            i = x;
-            j=2*i+1;
+    size_t j=2*i;
+    while(j<=size_){
+        if(j+1<=size_){
+            if(nodes_[j].first<=nodes_[j+1].first){
+                if(nodes_[j].first<=nodes_[i].first){
+                    std::swap(nodes_[i],nodes_[j]);
+                    i=j;
+                    j=2*i;
+                }
+                else{
+                    break;
+                }
+            }
+            else{
+                if(nodes_[j+1].first<=nodes_[i].first){
+                    std::swap(nodes_[i],nodes_[j+1]);
+                    i=j+1;
+                    j=2*i;
+                }
+                else{
+                    break;
+                }
+            }
+            
         }
-    }
-    if(2*i==size_){
-        if(nodes_[i].first>nodes_[2*i].first){
-            std::swap(nodes_[i],nodes_[2*i]);
-            i=2*i;
+        else{
+
+            if(nodes_[j].first<=nodes_[i].first){
+                std::swap(nodes_[i],nodes_[j]);
+                i=j;
+                j=2*i;
+            }
+            else{
+                break;
+            }
         }
     }
 }
 
-void PriorityQueue::removeNode(size_t i) {
-	std::swap(nodes_[i],nodes_[size_]);
-    nodes_.erase(nodes_.end());
-    heapifyDown(i);
+void PriorityQueue::removeNode(size_t i) { 
+    // swap(node at i, node at last index)
+    // reduce the size
+    // call  heapify down(i)
+        std::swap(nodes_[i],nodes_[size_]);
+        size_--;
+        heapifyDown(i);
+    
 }
 
 Key PriorityQueue::getKey(size_t i) {

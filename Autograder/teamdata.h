@@ -2,6 +2,9 @@
 #define _TEAMDATA_H_
 #include<vector>
 #include <string>
+#include "priorityqueue.h"
+
+
 
 class TeamData {
  public:
@@ -12,7 +15,7 @@ class TeamData {
  private:
 	// TODO: decide the type of this variable.
 	// winPercentages_;
-	std::vector<std::vector<double>> winPercentages_;
+	std::vector<std::vector<double>>winPercentages_;
 	int numPlayers_;
 
 };  // class TeamData

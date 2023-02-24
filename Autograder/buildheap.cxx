@@ -32,8 +32,11 @@ int main(int argc, char** argv) {
         else if(opn=="removeMin"){
             runi.removeMin();
         }
+   
     }
-    std::cout<<runi.JSON().dump(2)<<std::endl;
+    nlohmann::json d = runi.JSON();
+    d["metadata"]["numOperations"] = data["metadata"]["numOperations"];
+    std::cout<<d.dump(2)<<std::endl;
 
 
     return 0;

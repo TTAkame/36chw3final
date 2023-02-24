@@ -19,7 +19,6 @@ class PriorityQueue {
     bool isEmpty() const;
     size_t size() const;
     nlohmann::json JSON() const;
-
   private:
     void heapifyUp(size_t i);
     void heapifyDown(size_t i);
