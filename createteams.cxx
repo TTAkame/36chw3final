@@ -29,9 +29,9 @@ int main(int argc, char** argv) {
         xs = ganr.removeMin();
         opn = nlohmann::json::object();
 
-        opn["teams"]["playerOne"] = xs.second.first;
-        opn["teams"]["playerTwo"] = xs.second.second;
-        opn["teams"]["winPercentage"] = yawr.winPercentages(xs.second.first, xs.second.second);
+        opn = xs.second.first;
+        opn = xs.second.second;
+        opn = yawr.winPercentages(xs.second.first, xs.second.second);
 
         std::cout << opn.dump(2) << std::endl;
     }
